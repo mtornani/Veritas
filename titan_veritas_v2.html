@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITAN VERITAS v2 - Oriundi Scanner</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a24;
+            --accent-gold: #d4af37;
+            --accent-gold-dim: #b8960c;
+            --accent-blue: #4a9eff;
+            --accent-green: #22c55e;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f0f0f0;
+            --text-secondary: #888;
+            --border: #2a2a3a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(74, 158, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 15px; }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 25px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dim) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+
+        .version {
+            display: inline-block;
+            background: var(--accent-red);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tab:hover { border-color: var(--accent-gold-dim); }
+
+        .tab.active {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+        }
+
+        .tab-icon { font-size: 1.3rem; }
+        .tab-label { font-size: 0.8rem; font-weight: 600; margin-top: 3px; }
+
+        /* Panels */
+        .panel { display: none; }
+        .panel.active { display: block; }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form Elements */
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        textarea { min-height: 100px; resize: vertical; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dim) 100%);
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover { border-color: var(--accent-gold); }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        /* Checkbox group */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 10px;
+            background: var(--bg-secondary);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-item:hover { background: var(--bg-card); }
+        .checkbox-item input { width: auto; margin: 0; }
+
+        /* Results */
+        .result-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+        }
+
+        .result-item:hover { border-color: var(--accent-gold-dim); }
+
+        .result-item.filtered {
+            opacity: 0.4;
+            border-color: var(--accent-red);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            gap: 10px;
+        }
+
+        .result-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            flex: 1;
+        }
+
+        .result-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-high { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .badge-medium { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
+        .badge-low { background: rgba(34, 197, 94, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-noise { background: rgba(136, 136, 136, 0.2); color: var(--text-secondary); border: 1px solid var(--text-secondary); }
+
+        .result-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .result-details span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .result-snippet {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 8px 0;
+            padding: 8px;
+            background: var(--bg-primary);
+            border-radius: 4px;
+            line-height: 1.4;
+        }
+
+        .result-snippet mark {
+            background: rgba(212, 175, 55, 0.3);
+            color: var(--accent-gold);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .result-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent-blue);
+            word-break: break-all;
+        }
+
+        .result-link a { color: var(--accent-blue); text-decoration: none; }
+        .result-link a:hover { text-decoration: underline; }
+
+        .result-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover { border-color: var(--accent-gold); color: var(--text-primary); }
+        .btn-action.danger:hover { border-color: var(--accent-red); color: var(--accent-red); }
+        .btn-action.success:hover { border-color: var(--accent-green); color: var(--accent-green); }
+
+        /* Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .stat-label { font-size: 0.7rem; color: var(--text-secondary); }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover { border-color: var(--accent-gold); color: var(--text-primary); }
+        .filter-btn.active { border-color: var(--accent-gold); color: var(--accent-gold); background: rgba(212, 175, 55, 0.1); }
+
+        /* Progress */
+        .progress-container { margin: 15px 0; }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* Info box */
+        .info-box {
+            background: rgba(74, 158, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
+
+        .info-box.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--accent-orange);
+        }
+
+        /* Cognome tags */
+        .cognome-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            margin: 2px;
+        }
+
+        .cognome-tag.rare { background: rgba(239, 68, 68, 0.2); color: var(--accent-red); }
+        .cognome-tag.medium { background: rgba(245, 158, 11, 0.2); color: var(--accent-orange); }
+        .cognome-tag.common { background: rgba(136, 136, 136, 0.2); color: var(--text-secondary); }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            .logo { font-size: 1.5rem; }
+            .tabs { gap: 5px; }
+            .tab { padding: 10px 5px; }
+            .tab-label { font-size: 0.7rem; }
+            .checkbox-group { grid-template-columns: repeat(2, 1fr); }
+            .btn-row { flex-direction: column; }
+            .btn { width: 100%; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .filter-bar { justify-content: center; }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon { font-size: 3rem; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">TITAN VERITAS <span class="version">v2</span></div>
+            <div class="tagline">ORIUNDI SCANNER • SMART FILTERING</div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="search">
+                <div class="tab-icon">🔍</div>
+                <div class="tab-label">Cerca</div>
+            </div>
+            <div class="tab" data-tab="results">
+                <div class="tab-icon">📋</div>
+                <div class="tab-label">Risultati</div>
+            </div>
+            <div class="tab" data-tab="verified">
+                <div class="tab-icon">✅</div>
+                <div class="tab-label">Verificati</div>
+            </div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="panel active" id="panel-search">
+            <div class="card">
+                <div class="card-title">🔑 API Serper</div>
+                <label>API Key (gratis su serper.dev - 2500 ricerche)</label>
+                <input type="password" id="serper-key" placeholder="Inserisci API key">
+                <button class="btn btn-sm btn-secondary" onclick="saveApiKey()">💾 Salva</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📝 Cognomi da cercare</div>
+                
+                <div class="btn-row" style="margin-bottom: 12px;">
+                    <button class="btn btn-sm btn-secondary" onclick="loadRareCognomi()">🔴 Solo Rari</button>
+                    <button class="btn btn-sm btn-secondary" onclick="loadMediumCognomi()">🟡 Rari + Medi</button>
+                    <button class="btn btn-sm btn-secondary" onclick="loadAllCognomi()">📦 Tutti</button>
+                </div>
+
+                <textarea id="cognomi-input" placeholder="Un cognome per riga..."></textarea>
+                
+                <div id="cognomi-preview" style="margin-top: 8px;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🌍 Paesi Target</div>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="Argentina" checked> 🇦🇷 Argentina</label>
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="Brazil" checked> 🇧🇷 Brasile</label>
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="USA" checked> 🇺🇸 USA</label>
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="Uruguay"> 🇺🇾 Uruguay</label>
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="Paraguay"> 🇵🇾 Paraguay</label>
+                    <label class="checkbox-item"><input type="checkbox" name="country" value="Chile"> 🇨🇱 Cile</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">⚙️ Opzioni</div>
+                
+                <label>Limite ricerche per cognome</label>
+                <select id="search-depth">
+                    <option value="1">1 ricerca (veloce)</option>
+                    <option value="2" selected>2 ricerche (bilanciato)</option>
+                    <option value="3">3 ricerche (approfondito)</option>
+                </select>
+
+                <label>Risultati per ricerca</label>
+                <select id="results-per-search">
+                    <option value="5">5 risultati</option>
+                    <option value="10" selected>10 risultati</option>
+                    <option value="20">20 risultati</option>
+                </select>
+            </div>
+
+            <div class="info-box warning">
+                ⚠️ <strong>Filtri automatici attivi:</strong> Esclude automaticamente club RSM (La Fiorita, Tre Penne, ecc.), campionato italiano, giocatori famosi non correlati, pagine di "avversari".
+            </div>
+
+            <button class="btn btn-primary" onclick="startSearch()" id="btn-search" style="width: 100%;">
+                🚀 Avvia Ricerca Intelligente
+            </button>
+
+            <div class="progress-container" id="progress-container" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progress-text">Preparazione...</div>
+            </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="panel" id="panel-results">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Totali</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-valid">0</div>
+                    <div class="stat-label">Validi</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-high">0</div>
+                    <div class="stat-label">Alta Prob.</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-noise">0</div>
+                    <div class="stat-label">Filtrati</div>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-filter="valid">✅ Validi</button>
+                <button class="filter-btn" data-filter="high">🔴 Alta</button>
+                <button class="filter-btn" data-filter="all">📦 Tutti</button>
+                <button class="filter-btn" data-filter="noise">🗑️ Filtrati</button>
+            </div>
+
+            <div class="btn-row" style="margin-bottom: 15px;">
+                <button class="btn btn-sm btn-secondary" onclick="exportCSV()">📄 CSV</button>
+                <button class="btn btn-sm btn-secondary" onclick="exportJSON()">📦 JSON</button>
+                <button class="btn btn-sm btn-secondary" onclick="clearResults()">🗑️ Pulisci</button>
+            </div>
+
+            <div id="results-list"></div>
+        </div>
+
+        <!-- Verified Panel -->
+        <div class="panel" id="panel-verified">
+            <div class="info-box">
+                ✅ Qui trovi i candidati che hai marcato come "da verificare". Questi sono i profili più promettenti da sottoporre alla FSGC.
+            </div>
+
+            <div class="btn-row" style="margin-bottom: 15px;">
+                <button class="btn btn-sm btn-primary" onclick="exportVerifiedCSV()">📄 Esporta per FSGC</button>
+            </div>
+
+            <div id="verified-list"></div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==========================================
+        // COGNOMI DATABASE
+        // ==========================================
+        
+        const COGNOMI = {
+            rare: [
+                "Gasperoni", "Mularoni", "Zonzini", "Zafferani", "Vitaioli", "Bacciocchi",
+                "Podeschi", "Muraccini", "Capicchioni", "Volpinari", "Stolfi", "Cioncolini",
+                "Tamagnini", "Simoncini", "Matteoni", "Giardi", "Ghiotti", "Maiani", 
+                "Raschi", "Cevoli"
+            ],
+            medium: [
+                "Casadei", "Zanotti", "Guidi", "Selva", "Benedettini", "Stefanelli",
+                "Della Valle", "Nanni", "Valli", "Pasolini", "Francini", "Felici", 
+                "Ercolani", "Michelotti", "Renzetti", "Salvini", "Carchia", "Lombardi",
+                "Marquisio", "Riva", "Zoli", "Amati", "Arlotti", "Balducci"
+            ],
+            common: [
+                "Rossi", "Bianchi", "Valentini", "Ceci", "Ferrari", "Fabbri", 
+                "Graziani", "Marchetti", "Montanari", "Rinaldi", "Santi"
+            ]
+        };
+
+        // ==========================================
+        // BLACKLIST - DA ESCLUDERE
+        // ==========================================
+
+        const BLACKLIST = {
+            // Club sammarinesi
+            clubs: [
+                "la fiorita", "tre penne", "tre fiori", "folgore", "libertas", 
+                "cosmos", "murata", "domagnano", "faetano", "pennarossa", 
+                "fiorentino", "juvenes", "dogana", "cailungo", "san giovanni",
+                "virtus", "san marino academy", "san marino calcio"
+            ],
+            
+            // Campionati da escludere
+            leagues: [
+                "campionato sammarinese", "san marino championship", "serie a", 
+                "serie b", "serie c", "serie d", "primavera", "lega pro"
+            ],
+            
+            // Giocatori famosi (falsi positivi comuni)
+            famousPlayers: [
+                "messi", "ronaldo", "neymar", "mbappe", "haaland", "de bruyne",
+                "iniesta", "xavi", "modric", "kroos", "benzema", "lewandowski",
+                "salah", "kane", "son", "griezmann", "pogba", "hazard",
+                "robert taylor", "nacer chadli", "guilherme", "ivan piris"
+            ],
+            
+            // Pattern URL da escludere
+            urlPatterns: [
+                "spielegegeneinander", "gegner", "opponents", "against",
+                "marktwerte", "market-value", "statistics", "staff",
+                "berateruebersicht", "agents"
+            ],
+            
+            // Parole nel titolo che indicano rumore
+            titlePatterns: [
+                "youngest goal", "top scorer", "all players", "squad list",
+                "market value", "transfer", "rumour", "news"
+            ]
+        };
+
+        // ==========================================
+        // STATE
+        // ==========================================
+
+        let candidates = JSON.parse(localStorage.getItem('titan_v2_candidates') || '[]');
+        let verified = JSON.parse(localStorage.getItem('titan_v2_verified') || '[]');
+        let currentFilter = 'valid';
+
+        // ==========================================
+        // INIT
+        // ==========================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load API key
+            const savedKey = localStorage.getItem('serper_api_key');
+            if (savedKey) document.getElementById('serper-key').value = savedKey;
+            
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.filter;
+                    renderResults();
+                });
+            });
+
+            updateStats();
+        });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(`panel-${tabId}`).classList.add('active');
+            
+            if (tabId === 'results') renderResults();
+            if (tabId === 'verified') renderVerified();
+        }
+
+        // ==========================================
+        // COGNOMI LOADING
+        // ==========================================
+
+        function loadRareCognomi() {
+            document.getElementById('cognomi-input').value = COGNOMI.rare.join('\n');
+            updateCognomiPreview();
+            showToast(`Caricati ${COGNOMI.rare.length} cognomi rari`);
+        }
+
+        function loadMediumCognomi() {
+            const all = [...COGNOMI.rare, ...COGNOMI.medium];
+            document.getElementById('cognomi-input').value = all.join('\n');
+            updateCognomiPreview();
+            showToast(`Caricati ${all.length} cognomi`);
+        }
+
+        function loadAllCognomi() {
+            const all = [...COGNOMI.rare, ...COGNOMI.medium, ...COGNOMI.common];
+            document.getElementById('cognomi-input').value = all.join('\n');
+            updateCognomiPreview();
+            showToast(`Caricati ${all.length} cognomi`);
+        }
+
+        function getCognomi() {
+            return document.getElementById('cognomi-input').value
+                .split('\n')
+                .map(c => c.trim())
+                .filter(c => c.length > 0);
+        }
+
+        function getCognomeCategory(cognome) {
+            const c = cognome.toLowerCase();
+            if (COGNOMI.rare.map(x => x.toLowerCase()).includes(c)) return 'rare';
+            if (COGNOMI.medium.map(x => x.toLowerCase()).includes(c)) return 'medium';
+            return 'common';
+        }
+
+        function updateCognomiPreview() {
+            const cognomi = getCognomi();
+            const preview = document.getElementById('cognomi-preview');
+            
+            if (cognomi.length === 0) {
+                preview.innerHTML = '';
+                return;
+            }
+
+            const rare = cognomi.filter(c => getCognomeCategory(c) === 'rare').length;
+            const medium = cognomi.filter(c => getCognomeCategory(c) === 'medium').length;
+            const common = cognomi.filter(c => getCognomeCategory(c) === 'common').length;
+
+            preview.innerHTML = `
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">
+                    ${cognomi.length} cognomi: 
+                    <span style="color: var(--accent-red);">${rare} rari</span>, 
+                    <span style="color: var(--accent-orange);">${medium} medi</span>, 
+                    <span style="color: var(--text-secondary);">${common} comuni</span>
+                </span>
+            `;
+        }
+
+        document.getElementById('cognomi-input').addEventListener('input', updateCognomiPreview);
+
+        // ==========================================
+        // API KEY
+        // ==========================================
+
+        function saveApiKey() {
+            const key = document.getElementById('serper-key').value.trim();
+            if (key) {
+                localStorage.setItem('serper_api_key', key);
+                showToast('API key salvata');
+            }
+        }
+
+        // ==========================================
+        // SEARCH
+        // ==========================================
+
+        async function startSearch() {
+            const apiKey = document.getElementById('serper-key').value.trim() || 
+                           localStorage.getItem('serper_api_key');
+            
+            if (!apiKey) {
+                showToast('Inserisci la API key di Serper');
+                return;
+            }
+
+            const cognomi = getCognomi();
+            if (cognomi.length === 0) {
+                showToast('Carica almeno un cognome');
+                return;
+            }
+
+            const countries = Array.from(document.querySelectorAll('input[name="country"]:checked'))
+                .map(c => c.value);
+            
+            if (countries.length === 0) {
+                showToast('Seleziona almeno un paese');
+                return;
+            }
+
+            const depth = parseInt(document.getElementById('search-depth').value);
+            const resultsNum = parseInt(document.getElementById('results-per-search').value);
+
+            // UI
+            document.getElementById('btn-search').disabled = true;
+            document.getElementById('progress-container').style.display = 'block';
+
+            const totalSearches = cognomi.length * countries.length * depth;
+            let completed = 0;
+            let newCandidates = 0;
+
+            for (const cognome of cognomi) {
+                for (const country of countries) {
+                    const queries = generateSmartQueries(cognome, country, depth);
+                    
+                    for (const query of queries) {
+                        try {
+                            updateProgress(completed, totalSearches, `${cognome} in ${country}...`);
+                            
+                            const results = await searchSerper(apiKey, query, resultsNum);
+                            const processed = processResults(results, cognome, country);
+                            
+                            newCandidates += processed;
+                            completed++;
+                            
+                            // Rate limit
+                            await sleep(300);
+                        } catch (err) {
+                            console.error('Search error:', err);
+                            completed++;
+                        }
+                    }
+                }
+            }
+
+            // Done
+            document.getElementById('btn-search').disabled = false;
+            document.getElementById('progress-container').style.display = 'none';
+            
+            saveCandidates();
+            showToast(`Trovati ${newCandidates} nuovi candidati`);
+            switchTab('results');
+        }
+
+        function generateSmartQueries(cognome, country, depth) {
+            const queries = [];
+            
+            // Query 1: Transfermarkt player profile
+            queries.push(`site:transfermarkt.com "${cognome}" player ${country} -opponents -against -staff`);
+            
+            if (depth >= 2) {
+                // Query 2: BDFA (for Argentina) or general
+                if (country === 'Argentina') {
+                    queries.push(`site:bdfa.com.ar "${cognome}" jugador`);
+                } else {
+                    queries.push(`"${cognome}" footballer ${country} profile -"San Marino" -serie`);
+                }
+            }
+            
+            if (depth >= 3) {
+                // Query 3: Soccerway
+                queries.push(`site:soccerway.com "${cognome}" ${country}`);
+            }
+
+            return queries;
+        }
+
+        async function searchSerper(apiKey, query, num) {
+            const response = await fetch('https://google.serper.dev/search', {
+                method: 'POST',
+                headers: {
+                    'X-API-KEY': apiKey,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ q: query, num: num })
+            });
+
+            if (!response.ok) throw new Error(`API error: ${response.status}`);
+            
+            const data = await response.json();
+            return data.organic || [];
+        }
+
+        // ==========================================
+        // RESULT PROCESSING & FILTERING
+        // ==========================================
+
+        function processResults(results, searchedCognome, searchedCountry) {
+            let added = 0;
+
+            for (const result of results) {
+                const processed = analyzeResult(result, searchedCognome, searchedCountry);
+                
+                if (!isDuplicate(processed)) {
+                    candidates.push(processed);
+                    added++;
+                }
+            }
+
+            return added;
+        }
+
+        function analyzeResult(result, searchedCognome, searchedCountry) {
+            const title = result.title || '';
+            const snippet = result.snippet || '';
+            const link = result.link || '';
+            const fullText = `${title} ${snippet}`.toLowerCase();
+
+            // Determine if this is noise
+            const noiseReasons = [];
+            
+            // Check blacklisted clubs
+            for (const club of BLACKLIST.clubs) {
+                if (fullText.includes(club)) {
+                    noiseReasons.push(`Club RSM: ${club}`);
+                    break;
+                }
+            }
+
+            // Check blacklisted leagues
+            for (const league of BLACKLIST.leagues) {
+                if (fullText.includes(league)) {
+                    noiseReasons.push(`Lega esclusa: ${league}`);
+                    break;
+                }
+            }
+
+            // Check famous players
+            for (const player of BLACKLIST.famousPlayers) {
+                if (title.toLowerCase().includes(player)) {
+                    noiseReasons.push(`Giocatore famoso: ${player}`);
+                    break;
+                }
+            }
+
+            // Check URL patterns (opponents pages, etc.)
+            for (const pattern of BLACKLIST.urlPatterns) {
+                if (link.toLowerCase().includes(pattern)) {
+                    noiseReasons.push(`URL pattern: ${pattern}`);
+                    break;
+                }
+            }
+
+            // Check title patterns
+            for (const pattern of BLACKLIST.titlePatterns) {
+                if (title.toLowerCase().includes(pattern)) {
+                    noiseReasons.push(`Title pattern: ${pattern}`);
+                    break;
+                }
+            }
+
+            // Check if cognome appears in actual player name
+            const cognomeInTitle = title.toLowerCase().includes(searchedCognome.toLowerCase());
+            const cognomeInSnippet = snippet.toLowerCase().includes(searchedCognome.toLowerCase());
+            
+            if (!cognomeInTitle && !cognomeInSnippet) {
+                noiseReasons.push('Cognome non trovato nel testo');
+            }
+
+            // Try to extract player name
+            const playerName = extractPlayerName(title, snippet, searchedCognome);
+            
+            // Extract additional info
+            const age = extractAge(snippet);
+            const club = extractClub(snippet);
+            const position = extractPosition(snippet);
+
+            // Calculate score
+            const category = getCognomeCategory(searchedCognome);
+            let score = 0;
+            
+            if (category === 'rare') score += 3;
+            else if (category === 'medium') score += 2;
+            else score += 1;
+
+            if (['argentina', 'brazil', 'usa'].includes(searchedCountry.toLowerCase())) {
+                score += 2;
+            }
+
+            if (noiseReasons.length === 0) score += 2; // Bonus for clean result
+            if (cognomeInTitle) score += 1;
+            if (age && parseInt(age) < 30) score += 1;
+
+            const isNoise = noiseReasons.length > 0;
+
+            return {
+                id: Date.now() + Math.random(),
+                name: playerName,
+                surname: searchedCognome,
+                category: category,
+                country: searchedCountry,
+                age: age,
+                club: club,
+                position: position,
+                score: score,
+                isNoise: isNoise,
+                noiseReasons: noiseReasons,
+                title: title,
+                snippet: snippet,
+                link: link,
+                addedAt: new Date().toISOString()
+            };
+        }
+
+        function extractPlayerName(title, snippet, cognome) {
+            // Try to find a name pattern: "FirstName Cognome" or "Cognome, FirstName"
+            const cognomeLower = cognome.toLowerCase();
+            
+            // Pattern 1: "Name Cognome" in title
+            const regex1 = new RegExp(`([A-Z][a-zà-ÿ]+)\\s+${cognome}`, 'i');
+            const match1 = title.match(regex1);
+            if (match1) return `${match1[1]} ${cognome}`;
+
+            // Pattern 2: From Transfermarkt format "X. Cognome"
+            const regex2 = new RegExp(`([A-Z])\\.\\s*${cognome}`, 'i');
+            const match2 = title.match(regex2);
+            if (match2) return `${match2[1]}. ${cognome}`;
+
+            // Pattern 3: Just use title if it looks like a name
+            const titleClean = title.split(' - ')[0].split(' | ')[0].trim();
+            if (titleClean.length < 40 && titleClean.toLowerCase().includes(cognomeLower)) {
+                return titleClean;
+            }
+
+            return `[${cognome}] - da verificare`;
+        }
+
+        function extractAge(snippet) {
+            // Look for age patterns
+            const ageMatch = snippet.match(/(?:age|età|edad)[:\s]*(\d{1,2})/i);
+            if (ageMatch) return ageMatch[1];
+
+            // Look for birth year
+            const yearMatch = snippet.match(/\b(19[89]\d|200\d|201\d)\b/);
+            if (yearMatch) {
+                const year = parseInt(yearMatch[1]);
+                const age = new Date().getFullYear() - year;
+                if (age > 0 && age < 50) return age.toString();
+            }
+
+            return '';
+        }
+
+        function extractClub(snippet) {
+            // Look for common club patterns
+            const clubPatterns = [
+                /(?:club|team|squadra)[:\s]*([A-Za-zÀ-ÿ\s]+?)(?:\.|,|$)/i,
+                /(?:plays? for|gioca per)[:\s]*([A-Za-zÀ-ÿ\s]+?)(?:\.|,|$)/i
+            ];
+
+            for (const pattern of clubPatterns) {
+                const match = snippet.match(pattern);
+                if (match) return match[1].trim().substring(0, 30);
+            }
+
+            return '';
+        }
+
+        function extractPosition(snippet) {
+            const positions = {
+                'goalkeeper': 'Portiere', 'portiere': 'Portiere', 'gk': 'Portiere', 'goleiro': 'Portiere',
+                'defender': 'Difensore', 'difensore': 'Difensore', 'back': 'Difensore', 'zagueiro': 'Difensore',
+                'midfielder': 'Centrocampista', 'centrocampista': 'Centrocampista', 'midfield': 'Centrocampista', 'meia': 'Centrocampista',
+                'forward': 'Attaccante', 'attaccante': 'Attaccante', 'striker': 'Attaccante', 'atacante': 'Attaccante',
+                'winger': 'Ala', 'ala': 'Ala'
+            };
+
+            const snippetLower = snippet.toLowerCase();
+            for (const [key, value] of Object.entries(positions)) {
+                if (snippetLower.includes(key)) return value;
+            }
+
+            return '';
+        }
+
+        function isDuplicate(candidate) {
+            return candidates.some(c => 
+                c.link === candidate.link ||
+                (c.name === candidate.name && c.surname === candidate.surname)
+            );
+        }
+
+        // ==========================================
+        // RENDERING
+        // ==========================================
+
+        function renderResults() {
+            updateStats();
+            const container = document.getElementById('results-list');
+            
+            let filtered = candidates;
+
+            switch (currentFilter) {
+                case 'valid':
+                    filtered = candidates.filter(c => !c.isNoise);
+                    break;
+                case 'high':
+                    filtered = candidates.filter(c => !c.isNoise && c.score >= 5);
+                    break;
+                case 'noise':
+                    filtered = candidates.filter(c => c.isNoise);
+                    break;
+                // 'all' shows everything
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <p>Nessun risultato con questo filtro</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by score
+            filtered.sort((a, b) => b.score - a.score);
+
+            container.innerHTML = filtered.map(c => renderResultItem(c)).join('');
+        }
+
+        function renderResultItem(c) {
+            const badgeClass = c.isNoise ? 'badge-noise' : 
+                              (c.score >= 5 ? 'badge-high' : 
+                              (c.score >= 3 ? 'badge-medium' : 'badge-low'));
+            
+            const badgeText = c.isNoise ? '🗑️ FILTRATO' :
+                             (c.score >= 5 ? '🔴 ALTA' : 
+                             (c.score >= 3 ? '🟡 MEDIA' : '🟢 BASSA'));
+
+            const isVerified = verified.some(v => v.id === c.id);
+
+            // Highlight cognome in snippet
+            const highlightedSnippet = c.snippet.replace(
+                new RegExp(`(${c.surname})`, 'gi'),
+                '<mark>$1</mark>'
+            );
+
+            return `
+                <div class="result-item ${c.isNoise ? 'filtered' : ''}">
+                    <div class="result-header">
+                        <div class="result-name">${c.name}</div>
+                        <div class="result-badge ${badgeClass}">${badgeText}</div>
+                    </div>
+                    
+                    <div class="result-details">
+                        <span class="cognome-tag ${c.category}">${c.surname}</span>
+                        ${c.country ? `<span>🌍 ${c.country}</span>` : ''}
+                        ${c.age ? `<span>📅 ${c.age}</span>` : ''}
+                        ${c.club ? `<span>⚽ ${c.club}</span>` : ''}
+                        ${c.position ? `<span>👤 ${c.position}</span>` : ''}
+                        <span>⭐ ${c.score}</span>
+                    </div>
+
+                    <div class="result-snippet">${highlightedSnippet}</div>
+                    
+                    ${c.isNoise ? `
+                        <div style="font-size: 0.75rem; color: var(--accent-orange); margin-bottom: 8px;">
+                            ⚠️ ${c.noiseReasons.join(', ')}
+                        </div>
+                    ` : ''}
+
+                    <div class="result-link">
+                        <a href="${c.link}" target="_blank">${c.link}</a>
+                    </div>
+
+                    <div class="result-actions">
+                        ${!c.isNoise ? `
+                            <button class="btn-action success" onclick="toggleVerify(${c.id})">
+                                ${isVerified ? '✅ Verificato' : '☑️ Verifica'}
+                            </button>
+                        ` : `
+                            <button class="btn-action" onclick="markAsValid(${c.id})">
+                                ♻️ Ripristina
+                            </button>
+                        `}
+                        <button class="btn-action danger" onclick="removeCandidate(${c.id})">
+                            🗑️ Elimina
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderVerified() {
+            const container = document.getElementById('verified-list');
+
+            if (verified.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <p>Nessun candidato verificato</p>
+                        <p style="font-size: 0.8rem;">Vai su Risultati e clicca "Verifica" sui candidati promettenti</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = verified.map(c => `
+                <div class="result-item">
+                    <div class="result-header">
+                        <div class="result-name">${c.name}</div>
+                        <span class="cognome-tag ${c.category}">${c.surname}</span>
+                    </div>
+                    
+                    <div class="result-details">
+                        ${c.country ? `<span>🌍 ${c.country}</span>` : ''}
+                        ${c.age ? `<span>📅 ${c.age}</span>` : ''}
+                        ${c.club ? `<span>⚽ ${c.club}</span>` : ''}
+                    </div>
+
+                    <div class="result-link">
+                        <a href="${c.link}" target="_blank">${c.link}</a>
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn-action danger" onclick="removeVerified(${c.id})">
+                            ❌ Rimuovi
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // ACTIONS
+        // ==========================================
+
+        function toggleVerify(id) {
+            const candidate = candidates.find(c => c.id === id);
+            if (!candidate) return;
+
+            const idx = verified.findIndex(v => v.id === id);
+            if (idx >= 0) {
+                verified.splice(idx, 1);
+            } else {
+                verified.push(candidate);
+            }
+
+            saveVerified();
+            renderResults();
+            showToast(idx >= 0 ? 'Rimosso dai verificati' : 'Aggiunto ai verificati');
+        }
+
+        function markAsValid(id) {
+            const candidate = candidates.find(c => c.id === id);
+            if (candidate) {
+                candidate.isNoise = false;
+                candidate.noiseReasons = [];
+                saveCandidates();
+                renderResults();
+                showToast('Ripristinato');
+            }
+        }
+
+        function removeCandidate(id) {
+            candidates = candidates.filter(c => c.id !== id);
+            verified = verified.filter(v => v.id !== id);
+            saveCandidates();
+            saveVerified();
+            renderResults();
+            showToast('Eliminato');
+        }
+
+        function removeVerified(id) {
+            verified = verified.filter(v => v.id !== id);
+            saveVerified();
+            renderVerified();
+            showToast('Rimosso dai verificati');
+        }
+
+        function clearResults() {
+            if (confirm('Eliminare tutti i risultati?')) {
+                candidates = [];
+                saveCandidates();
+                renderResults();
+                showToast('Risultati eliminati');
+            }
+        }
+
+        // ==========================================
+        // STATS
+        // ==========================================
+
+        function updateStats() {
+            const valid = candidates.filter(c => !c.isNoise);
+            const high = valid.filter(c => c.score >= 5);
+            const noise = candidates.filter(c => c.isNoise);
+
+            document.getElementById('stat-total').textContent = candidates.length;
+            document.getElementById('stat-valid').textContent = valid.length;
+            document.getElementById('stat-high').textContent = high.length;
+            document.getElementById('stat-noise').textContent = noise.length;
+        }
+
+        // ==========================================
+        // EXPORT
+        // ==========================================
+
+        function exportCSV() {
+            const valid = candidates.filter(c => !c.isNoise);
+            if (valid.length === 0) {
+                showToast('Nessun candidato valido da esportare');
+                return;
+            }
+
+            const headers = ['Nome', 'Cognome', 'Categoria', 'Paese', 'Età', 'Club', 'Ruolo', 'Score', 'Link'];
+            const rows = valid.map(c => [
+                c.name, c.surname, c.category, c.country, c.age, c.club, c.position, c.score, c.link
+            ]);
+
+            downloadCSV([headers, ...rows], 'titan_veritas_candidati.csv');
+            showToast('CSV esportato');
+        }
+
+        function exportVerifiedCSV() {
+            if (verified.length === 0) {
+                showToast('Nessun candidato verificato');
+                return;
+            }
+
+            const headers = ['Nome', 'Cognome', 'Categoria', 'Paese', 'Età', 'Club', 'Link'];
+            const rows = verified.map(c => [
+                c.name, c.surname, c.category, c.country, c.age, c.club, c.link
+            ]);
+
+            downloadCSV([headers, ...rows], 'titan_veritas_FSGC.csv');
+            showToast('CSV per FSGC esportato');
+        }
+
+        function exportJSON() {
+            const valid = candidates.filter(c => !c.isNoise);
+            if (valid.length === 0) {
+                showToast('Nessun candidato valido');
+                return;
+            }
+
+            const blob = new Blob([JSON.stringify(valid, null, 2)], { type: 'application/json' });
+            downloadBlob(blob, 'titan_veritas_candidati.json');
+            showToast('JSON esportato');
+        }
+
+        function downloadCSV(rows, filename) {
+            const csv = rows.map(row => row.map(cell => `"${(cell || '').toString().replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            downloadBlob(blob, filename);
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ==========================================
+        // PERSISTENCE
+        // ==========================================
+
+        function saveCandidates() {
+            localStorage.setItem('titan_v2_candidates', JSON.stringify(candidates));
+            updateStats();
+        }
+
+        function saveVerified() {
+            localStorage.setItem('titan_v2_verified', JSON.stringify(verified));
+        }
+
+        // ==========================================
+        // UTILS
+        // ==========================================
+
+        function updateProgress(current, total, text) {
+            const pct = Math.round((current / total) * 100);
+            document.getElementById('progress-fill').style.width = `${pct}%`;
+            document.getElementById('progress-text').textContent = `${text} (${current}/${total})`;
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
