@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#141C32">
+    <title>TITAN VERITAS v3.6 - FSGC Intelligence Platform</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           FSGC OFFICIAL STYLE v3.6
+           ========================================== */
+        
+        :root {
+            /* FSGC Official Palette */
+            --main-primary: #5EB3E4;
+            --main-primary-rgb: 94, 179, 228;
+            --main-secondary: #DAA900;
+            --main-secondary-rgb: 218, 171, 0;
+            --main-tertiary: #9A9B9E;
+            --main-dark: #141C32;
+            --main-primary-semi: #5EB3E480;
+            --main-dark-semi: #141C3280;
+            
+            /* Semantic Colors */
+            --info: #ddeeed;
+            --success: #c9f8d7;
+            --warning: #ffe4ad;
+            --danger: #ffc6c2;
+            --primary: #3B68ED;
+            --primary-light: #EAEDF7;
+            --secondary: #2B4CAD;
+            --badge: #E15560;
+            --gray: #ABABAB;
+            --gray-light: #DBDBDB;
+            
+            /* Border Colors */
+            --info-border: #2b4cad;
+            --success-border: #003809;
+            --warning-border: #5d3600;
+            --danger-border: #7c3130;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f8f9fa;
+            color: var(--main-dark);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--main-dark);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-nazionale {
+            height: 60px;
+            width: auto;
+        }
+
+        .logo-fsgc {
+            height: 50px;
+            width: auto;
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--main-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-title .subtitle {
+            font-size: 0.85rem;
+            color: var(--main-primary);
+            letter-spacing: 1px;
+        }
+
+        .version-badge {
+            background: var(--main-secondary);
+            color: var(--main-dark);
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: var(--info);
+            border-color: var(--info-border);
+        }
+
+        .alert-warning {
+            background: var(--warning);
+            border-color: var(--warning-border);
+        }
+
+        .alert-danger {
+            background: var(--danger);
+            border-color: var(--danger-border);
+        }
+
+        .alert-success {
+            background: var(--success);
+            border-color: var(--success-border);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background: var(--main-dark);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .card-body {
+            padding: 15px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--main-dark);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid var(--gray-light);
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--main-primary);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--main-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4a9fd0;
+        }
+
+        .btn-secondary {
+            background: var(--main-secondary);
+            color: var(--main-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #c49800;
+        }
+
+        .btn-danger {
+            background: var(--badge);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c94550;
+        }
+
+        .btn-dark {
+            background: var(--main-dark);
+            color: white;
+        }
+
+        .btn-dark:hover {
+            background: #1f2a47;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--main-primary);
+            color: var(--main-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--main-primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Tabs */
+        .nav-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--gray-light);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .nav-tab:hover {
+            color: var(--main-dark);
+        }
+
+        .nav-tab.active {
+            color: var(--main-primary);
+            border-bottom-color: var(--main-primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--main-dark);
+            color: white;
+        }
+
+        th {
+            padding: 12px 10px;
+            text-align: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--gray-light);
+            font-size: 0.9rem;
+        }
+
+        tbody tr:hover {
+            background: var(--primary-light);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-high {
+            background: var(--success);
+            color: var(--success-border);
+        }
+
+        .badge-medium {
+            background: var(--warning);
+            color: var(--warning-border);
+        }
+
+        .badge-low {
+            background: var(--danger);
+            color: var(--danger-border);
+        }
+
+        .badge-verified {
+            background: var(--main-primary);
+            color: white;
+        }
+
+        .badge-pending {
+            background: var(--gray-light);
+            color: var(--main-dark);
+        }
+
+        .badge-country {
+            background: var(--main-dark);
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        /* Progress */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--gray-light);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--main-primary), var(--main-secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--main-primary);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Grid */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .col-6 {
+            flex: 0 0 50%;
+            padding: 0 10px;
+        }
+
+        .col-4 {
+            flex: 0 0 33.333%;
+            padding: 0 10px;
+        }
+
+        .col-3 {
+            flex: 0 0 25%;
+            padding: 0 10px;
+        }
+
+        @media (max-width: 768px) {
+            .col-6, .col-4, .col-3 {
+                flex: 0 0 100%;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-left {
+                flex-direction: column;
+            }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            background: var(--main-dark);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--main-dark);
+            color: white;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 2000;
+            border-left: 4px solid var(--main-secondary);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Link */
+        a {
+            color: var(--main-primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Checkbox group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--main-primary);
+        }
+
+        /* Input group */
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-group .form-control {
+            flex: 1;
+        }
+
+        /* Status indicator */
+        .status-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--success-border);
+        }
+
+        .status-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-top: 40px;
+            border-top: 1px solid var(--gray-light);
+        }
+
+        .footer-logos {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .footer-logos img {
+            height: 40px;
+            opacity: 0.7;
+        }
+
+        /* Utility */
+        .text-center { text-align: center; }
+        .text-muted { color: var(--gray); }
+        .mt-10 { margin-top: 10px; }
+        .mt-20 { margin-top: 20px; }
+        .mb-10 { margin-bottom: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+        .hidden { display: none; }
+
+        /* Country tags */
+        .country-tags {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .country-tag {
+            font-size: 1.2rem;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <img src="data:image/png;base64,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, surname, country) {
+            const title = result.title || '';
+            const snippet = result.snippet || '';
+            const link = result.link || '';
+            const combined = (title + ' ' + snippet).toLowerCase();
+
+            // Escludi risultati italiani
+            for (const club of ITALIAN_CLUBS) {
+                if (combined.includes(club) || link.toLowerCase().includes(club)) {
+                    return null;
+                }
+            }
+
+            // Escludi pagine non di giocatori
+            if (combined.includes('squad') || combined.includes('season') || combined.includes('rosa') || 
+                combined.includes('plantilla') || combined.includes('elenco')) {
+                return null;
+            }
+
+            // Estrai nome
+            let name = title.split('-')[0].split('|')[0].trim();
+            
+            // Estrai età
+            let age = null;
+            const ageMatch = combined.match(/(\d{1,2})\s*(years?|años?|anni|anos)/i) || 
+                            combined.match(/age[:\s]+(\d{1,2})/i) ||
+                            combined.match(/nato nel (\d{4})/i);
+            if (ageMatch) {
+                if (ageMatch[1].length === 4) {
+                    age = new Date().getFullYear() - parseInt(ageMatch[1]);
+                } else {
+                    age = parseInt(ageMatch[1]);
+                }
+            }
+
+            // Estrai club
+            let club = '';
+            const clubMatch = combined.match(/(?:plays? for|club|equipo|squadra|time)[:\s]+([^,.\n]+)/i);
+            if (clubMatch) club = clubMatch[1].trim();
+
+            // Determina priorità
+            const priority = SURNAMES.rare.includes(surname) ? 'high' : 
+                           SURNAMES.medium.includes(surname) ? 'medium' : 'low';
+
+            return {
+                id: Date.now() + Math.random().toString(36).substr(2, 9),
+                name: name,
+                surname: surname,
+                country: country,
+                countryFlag: COUNTRY_SOURCES[country]?.flag || '🌍',
+                club: club,
+                age: age,
+                priority: priority,
+                link: link,
+                source: result.displayLink || '',
+                verified: false,
+                addedAt: new Date().toISOString()
+            };
+        }
+
+        function isValidCandidate(candidate, ageMin, ageMax) {
+            if (candidate.age && (candidate.age < ageMin || candidate.age > ageMax)) return false;
+            const isDuplicate = candidates.some(c => c.surname === candidate.surname && c.name === candidate.name && c.country === candidate.country);
+            return !isDuplicate;
+        }
+
+        function addCandidate(candidate) {
+            candidates.push(candidate);
+            saveToStorage();
+            updateStats();
+        }
+
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+        function addManualCandidate() {
+            const name = document.getElementById('manual-name').value.trim();
+            const surname = document.getElementById('manual-surname').value.trim();
+            const country = document.getElementById('manual-country').value.trim();
+            const club = document.getElementById('manual-club').value.trim();
+            const age = parseInt(document.getElementById('manual-age').value) || null;
+            const link = document.getElementById('manual-link').value.trim();
+            if (!name || !surname) { showToast('Nome e cognome obbligatori'); return; }
+            const priority = SURNAMES.rare.includes(surname) ? 'high' : SURNAMES.medium.includes(surname) ? 'medium' : 'low';
+            candidates.push({
+                id: Date.now() + Math.random().toString(36).substr(2, 9),
+                name, surname, country: country.toLowerCase(),
+                countryFlag: COUNTRY_SOURCES[country.toLowerCase()]?.flag || '🌍',
+                club, age, priority, link, source: 'Manuale', verified: false, addedAt: new Date().toISOString()
+            });
+            saveToStorage(); renderResults(); updateStats();
+            ['manual-name','manual-surname','manual-country','manual-club','manual-age','manual-link'].forEach(id => document.getElementById(id).value = '');
+            showToast('Candidato aggiunto');
+        }
+
+        function loadDefaultSurnames() {
+            showToast('Caricati ' + (SURNAMES.rare.length + SURNAMES.medium.length + SURNAMES.common.length) + ' cognomi');
+        }
+
+        function renderResults(filter = 'all') {
+            const tbody = document.getElementById('results-body');
+            const emptyState = document.getElementById('empty-state');
+            let filtered = filter === 'all' ? candidates : candidates.filter(c => c.priority === filter);
+            if (filtered.length === 0) { tbody.innerHTML = ''; emptyState.style.display = 'block'; document.getElementById('results-count').textContent = '0 risultati'; return; }
+            emptyState.style.display = 'none';
+            document.getElementById('results-count').textContent = filtered.length + ' risultati';
+            filtered.sort((a, b) => ({ high: 0, medium: 1, low: 2 })[a.priority] - ({ high: 0, medium: 1, low: 2 })[b.priority]);
+            tbody.innerHTML = filtered.map(c => `<tr><td>${escapeHtml(c.name)}</td><td><strong>${escapeHtml(c.surname)}</strong></td><td>${c.countryFlag} ${escapeHtml(c.country)}</td><td>${escapeHtml(c.club||'-')}</td><td>${c.age||'-'}</td><td><span class="badge badge-${c.priority}">${c.priority==='high'?'Alta':c.priority==='medium'?'Media':'Bassa'}</span></td><td>${c.verified?'<span class="badge badge-verified">✓</span>':'-'}</td><td class="row-actions">${c.link?`<a href="${c.link}" target="_blank"><button>🔗</button></a>`:''}<button onclick="toggleVerified('${c.id}')">${c.verified?'✗':'✓'}</button><button onclick="deleteCandidate('${c.id}')">🗑️</button></td></tr>`).join('');
+        }
+
+        function filterResults(filter) { renderResults(filter); }
+        function toggleVerified(id) { const c = candidates.find(x => x.id === id); if(c) { c.verified = !c.verified; saveToStorage(); renderResults(); updateStats(); } }
+        function deleteCandidate(id) { if(confirm('Eliminare?')) { candidates = candidates.filter(c => c.id !== id); saveToStorage(); renderResults(); updateStats(); showToast('Eliminato'); } }
+        function updateStats() { document.getElementById('stat-candidates').textContent = candidates.length; document.getElementById('stat-verified').textContent = candidates.filter(c => c.verified).length; document.getElementById('stat-priority').textContent = candidates.filter(c => c.priority === 'high').length; }
+        function escapeHtml(str) { return str ? str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+
+        function generateReportHTML() {
+            const title = document.getElementById('report-title').value || 'Report Candidati Oriundi';
+            const notes = document.getElementById('report-notes').value || '';
+            const date = new Date().toLocaleDateString('it-IT');
+            const high = candidates.filter(c => c.priority === 'high');
+            const med = candidates.filter(c => c.priority === 'medium');
+            return `<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><title>${title}</title><style>body{font-family:Roboto,Arial,sans-serif;max-width:800px;margin:0 auto;padding:40px 20px;color:#141C32}.header{text-align:center;border-bottom:3px solid #141C32;padding-bottom:20px;margin-bottom:30px}h1{color:#141C32;font-size:1.8rem;margin:10px 0;text-transform:uppercase;letter-spacing:2px}.subtitle{color:#5EB3E4;font-size:0.9rem}.confidential{background:#ffe4ad;color:#5d3600;padding:12px 20px;text-align:center;margin:20px 0;border-left:4px solid #5d3600;font-weight:500}.section{margin:30px 0}.section-title{background:#141C32;color:white;padding:10px 15px;font-weight:500;text-transform:uppercase}table{width:100%;border-collapse:collapse}th{background:#5EB3E4;color:white;padding:10px;text-align:left;font-size:0.8rem;text-transform:uppercase}td{padding:10px;border-bottom:1px solid #ddd;font-size:0.85rem}.footer{margin-top:40px;padding-top:20px;border-top:2px solid #141C32;text-align:center;font-size:0.8rem;color:#666}</style></head><body><div class="header"><h1>${escapeHtml(title)}</h1><div class="subtitle">TITAN VERITAS v3.6 • FSGC</div><div class="subtitle">${date} • ${candidates.length} candidati</div></div><div class="confidential">⚠️ CONFIDENZIALE — USO INTERNO FSGC — DA VERIFICARE</div>${notes?`<div style="background:#f8f9fa;padding:15px;margin:20px 0;border-left:4px solid #5EB3E4"><strong>Note:</strong> ${escapeHtml(notes)}</div>`:''}${high.length?`<div class="section"><div class="section-title">🔴 Alta Priorità (${high.length})</div><table><thead><tr><th>Nome</th><th>Cognome</th><th>Paese</th><th>Club</th><th>Età</th></tr></thead><tbody>${high.map(c=>`<tr><td>${escapeHtml(c.name)}</td><td><strong>${escapeHtml(c.surname)}</strong></td><td>${c.countryFlag} ${escapeHtml(c.country)}</td><td>${escapeHtml(c.club||'-')}</td><td>${c.age||'-'}</td></tr>`).join('')}</tbody></table></div>`:''}${med.length?`<div class="section"><div class="section-title">🟡 Media Priorità (${med.length})</div><table><thead><tr><th>Nome</th><th>Cognome</th><th>Paese</th><th>Club</th><th>Età</th></tr></thead><tbody>${med.map(c=>`<tr><td>${escapeHtml(c.name)}</td><td><strong>${escapeHtml(c.surname)}</strong></td><td>${c.countryFlag} ${escapeHtml(c.country)}</td><td>${escapeHtml(c.club||'-')}</td><td>${c.age||'-'}</td></tr>`).join('')}</tbody></table></div>`:''}<div class="footer"><strong>TITAN VERITAS v3.6</strong> — FSGC<br><em>Dati da verificare tramite anagrafe RSM</em></div></body></html>`;
+        }
+
+        function previewReport() { document.getElementById('report-preview-content').innerHTML = generateReportHTML(); openModal('modal-report'); }
+        function downloadHTML() { const blob = new Blob([generateReportHTML()], {type:'text/html;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `FSGC_TITAN_Report_${new Date().toISOString().split('T')[0]}.html`; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast('Report scaricato'); }
+        function downloadCSV() { const h = ['Nome','Cognome','Paese','Club','Età','Priorità','Verificato','Link']; const r = candidates.map(c => [c.name,c.surname,c.country,c.club||'',c.age||'',c.priority,c.verified?'Sì':'No',c.link||'']); const csv = [h,...r].map(row => row.map(c => `"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n'); const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `FSGC_TITAN_Export_${new Date().toISOString().split('T')[0]}.csv`; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast('CSV esportato'); }
+        function printReport() { const w = window.open('','_blank'); w.document.write(generateReportHTML()); w.document.close(); setTimeout(() => w.print(), 500); }
+        function exportData() { const data = {candidates,verified,exportedAt:new Date().toISOString(),version:'3.6'}; const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `TITAN_Backup_${new Date().toISOString().split('T')[0]}.json`; document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast('Dati esportati'); }
+        function importData() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = e => { const reader = new FileReader(); reader.onload = ev => { try { const data = JSON.parse(ev.target.result); if(data.candidates) { candidates = data.candidates; verified = data.verified || []; saveToStorage(); renderResults(); updateStats(); showToast('Importati ' + candidates.length + ' candidati'); } } catch(e) { showToast('Errore JSON'); } }; reader.readAsText(e.target.files[0]); }; input.click(); }
+        function clearAllData() { if(confirm('Cancellare tutti i dati?')) { candidates = []; verified = []; saveToStorage(); renderResults(); updateStats(); showToast('Dati cancellati'); } }
+    </script>
+</body>
+</html>
